@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "skills": {
+    "learn-profile": {
+      "source": "vasanthsreeram/Alvarmethod",
+      "sourceType": "github",
+      "skillPath": "skills/learn-profile/SKILL.md",
+      "computedHash": "65361fd77812a21dc15b737fc3e81ca4c516e42162a99baf5f586cc438409e49"
+    },
+    "learn-verify": {
+      "source": "vasanthsreeram/Alvarmethod",
+      "sourceType": "github",
+      "skillPath": "skills/learn-verify/SKILL.md",
+      "computedHash": "45d80051d037ede6a1dbd9c0107fc5fb2d1f5f57455aa0dff7344bfdc6802a1b"
+    },
+    "learn-visual": {
+      "source": "vasanthsreeram/Alvarmethod",
+      "sourceType": "github",
+      "skillPath": "skills/learn-visual/SKILL.md",
+      "computedHash": "c1c56a05879c2c32491df655a784c4d20b99725c970728b84e41f530872a4350"
+    },
+    "probe": {
+      "source": "vasanthsreeram/Alvarmethod",
+      "sourceType": "github",
+      "skillPath": "skills/probe/SKILL.md",
+      "computedHash": "a9594cb3e5a15b333d7fbb7bae888f8f8b7af9c2a1ea66958c9779f11a79c25a"
+    },
+    "teach": {
+      "source": "vasanthsreeram/Alvarmethod",
+      "sourceType": "github",
+      "skillPath": "skills/teach/SKILL.md",
+      "computedHash": "75c1a835321ce768c9bafbf971cc82d75a7d02369f5a6f12179e5392ee9ca454"
+    }
+  }
+}
