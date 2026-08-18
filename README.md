@@ -8,7 +8,7 @@ The teaching methodology is the open-source [Alvarmethod](https://github.com/vas
 
 ## What it is
 
-A personal tutor that lives in this folder. Open it in OpenCode to learn. Open it in Obsidian to review.
+A personal tutor that lives in this folder. Open it in Pi to learn. Open it in Obsidian to review.
 
 ## Core loop
 
@@ -28,7 +28,7 @@ Probe → Plan → Teach → Verify → Prove
                          USER
                            │
                            ▼
-                       OpenCode
+                          Pi
                            │
                            ▼
                     Aristotle Skill
@@ -37,7 +37,7 @@ Probe → Plan → Teach → Verify → Prove
               ▼            ▼            ▼
             Probe         Plan        Teach
               │            │            ▼
-           Question      Mermaid     One Node
+           ask_user      Mermaid     One Node
               │            │            │
               └────────────┼────────────┘
                            ▼
@@ -63,7 +63,7 @@ Probe → Plan → Teach → Verify → Prove
 
 | Component | What it does |
 |-----------|----------------|
-| OpenCode | Agent runtime, `/teach` command, native `question` quizzes |
+| Pi | Agent runtime, `/teach` command, `ask_user` quizzes, HTML widgets |
 | `teach` skill | Probe → plan → one node → lock-in quiz |
 | `probe` | Broad-then-narrow knowledge calibration |
 | `learn-profile` | Interview that writes `.alvar/LEARNER.md` |
@@ -78,41 +78,31 @@ Aristotle handles learning logistics. The learner handles the cognitive work.
 
 ### Prerequisites
 
-- [OpenCode](https://opencode.ai) (`opencode --version`)
+- [Pi](https://pi.dev) (`pi --version`) — Gemini is the default provider
 - Node.js / `npx` (to install or update skills)
 - [Obsidian](https://obsidian.md) (optional, for reading the vault)
 
-### Skills
+Store a Gemini API key in `~/.pi/agent/auth.json` (never in this repo):
 
-Teaching skills come from Alvarmethod. From this directory:
-
-```bash
-npx skills add vasanthsreeram/Alvarmethod -g -y -a opencode
+```json
+{
+  "google": { "type": "api_key", "key": "YOUR_GEMINI_API_KEY" }
+}
 ```
 
-This vault also keeps a project-local copy under `.opencode/skills/` so OpenCode can discover `teach` when you run from here.
-
-Verify discovery:
+Then from this directory:
 
 ```bash
-cd ~/Aristotle   # or this repo
-opencode debug skill | grep '"name": "teach"'
+pi
 ```
 
-Or run:
+This vault already has project-local Pi packages for quizzes (`ask_user`) and HTML (`show_widget`, `render_visual`). Trust the project if Pi asks.
 
-```bash
-./scripts/validate.sh
-```
-
-### OpenCode
-
-```bash
-cd ~/Aristotle
-opencode
-```
+Skills live under `.agents/skills/` (Pi discovers them). Slash commands: `/teach`, `/probe`, `/learn-profile`, `/learn-visual`.
 
 This repo lives at `~/Developer/Aristotle` with a symlink at `~/Aristotle` when that path was free.
+
+OpenCode still works as a fallback (`opencode`, `.opencode/`).
 
 ## Obsidian
 
@@ -140,7 +130,7 @@ Aristotle should:
 
 1. Load `.alvar/LEARNER.md`
 2. Reuse a recent map for this goal, or probe
-3. Probe missing knowledge with `question`
+3. Probe missing knowledge with `ask_user`
 4. Build and show a Mermaid dependency graph
 5. Teach the first node — only one
 6. Ask a lock-in question
@@ -161,7 +151,9 @@ Aristotle/
 │   ├── research/
 │   ├── knowledge/
 │   └── templates/
-├── .opencode/              # OpenCode commands and skills
+├── .pi/                    # Pi prompts, settings, and packages
+├── .agents/skills/         # Teaching skills (Pi + other agents)
+├── .opencode/              # OpenCode fallback commands and skills
 ├── subjects/
 ├── projects/
 ├── AGENTS.md               # operating rules for the tutor
@@ -190,6 +182,6 @@ See `tests/README.md` for the eight checks and what still needs a live OpenCode 
 
 ## v0.1 scope
 
-Local-first: OpenCode + agent skills + Markdown + YAML + Mermaid + Obsidian.
+Local-first: Pi + agent skills + Markdown + YAML + Mermaid + Obsidian.
 
 Not in v0.1: React, databases, RAG, auth, cloud, custom frontends, telemetry.

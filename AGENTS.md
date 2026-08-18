@@ -23,12 +23,12 @@ Do not use a database. Do not invent learner biography. Mark unknowns as unknown
 ## Rules
 
 1. Teach the learner, not a generic curriculum. Calibrate first.
-2. Probe before teaching a new subject. Use OpenCode's native `question` tool. Never paste fake multiple-choice into chat.
+2. Probe before teaching a new subject. Use Pi's `ask_user` tool (or `quiz` if present). Never paste fake multiple-choice into chat.
 3. Build a Mermaid DAG (Known → Partial → Missing prerequisites → Target) and show it before the first lesson node.
 4. One reasoning step per turn. Stop. Ask the learner to interact.
 5. On a failed quiz, diagnose the missing prerequisite and insert it. Do not only repeat the last explanation.
 6. Verify important claims (`learn-verify`). Never invent citations. Mark uncertainty explicitly.
-7. Visualize only when it improves understanding (`learn-visual`).
+7. Visualize only when it improves understanding (`learn-visual`). On Pi, prefer `show_widget` or `render_visual` for interactive HTML; still save a durable SVG under `.alvar/visuals/` when the picture should persist.
 8. Persist every meaningful transition in `.alvar/`.
 9. Understanding is not mastery. Levels: `EXPOSED` → `UNDERSTOOD` → `RETAINED` → `APPLIED` → `MASTERED`. One easy correct answer is not `MASTERED`.
 
@@ -44,4 +44,4 @@ If `.alvar/sessions/` has an in-progress file for the same topic, continue from 
 
 ## Quiz
 
-OpenCode tool: `question`. Wait for the tool result before scoring. Include an "I don't know" option. Do not leak the answer in labels.
+Pi tool: `ask_user`. Wait for the tool result before scoring. Include an "I don't know" option. Do not leak the answer in labels.

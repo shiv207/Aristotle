@@ -1,0 +1,12 @@
+{
+  "defaultProvider": "google",
+  "defaultModel": "gemini-3.5-flash",
+  "markdown": {
+    "mermaid": "streaming"
+  },
+  "packages": [
+    "npm:pi-ask-user",
+    "npm:@eliemessiecode/pi-render",
+    "npm:pi-generative-ui"
+  ]
+}

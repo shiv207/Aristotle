@@ -40,6 +40,7 @@ unknown — probe before assuming mechanics, electromagnetism, or quantum.
 This section is updated automatically by Aristotle.
 
 - **Vectors** (topic: `vectors`, mastery: `EXPOSED`, last tested: none — quiz skipped)
+- **Coordinate Frames & Transforms** (topic: `coordinate-frames-transforms`, mastery: `UNDERSTOOD`, last tested: 2026-08-18)
 
 ## Known strengths
 

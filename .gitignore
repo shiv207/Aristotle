@@ -16,3 +16,7 @@ node_modules/
 .obsidian/plugins/
 
 # Do not ignore .alvar — it is Aristotle's state layer
+
+# Pi package caches (keep .pi/settings.json and .pi/prompts)
+.pi/npm/
+.pi/git/
