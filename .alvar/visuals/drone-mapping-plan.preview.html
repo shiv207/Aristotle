@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Real-Time Drone Mapping Plan</title>
+  <style>
+    :root { color-scheme: dark light; }
+    body { font: 16px/1.5 ui-sans-serif, system-ui, sans-serif; margin: 24px auto; max-width: 880px; padding: 0 16px; }
+    pre { overflow: auto; padding: 12px; background: color-mix(in srgb, CanvasText 8%, Canvas); }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .mermaid { margin: 1.5rem 0; }
+  </style>
+</head>
+<body>
+  <div id="content"></div>
+  <script type="text/plain" id="source"># Real-Time Drone Mapping & Position Update Plan
+
+Here is our learning path. We have completed **Coordinate Frames & Transforms**. Today, we are moving to **Sensors: What Each One Actually Gives You**.
+
+```mermaid
+graph TD
+    A[Coordinate Frames & Transforms] style A fill:#90EE90,stroke:#333,stroke-width:2px
+    B[Sensors: What Each One Actually Gives You] style B fill:#FFD700,stroke:#333,stroke-width:2px
+    C[Sensor Fusion — EKF/UKF]
+    D[SLAM — Simultaneous Localization & Mapping]
+    E[Real-Time Mapping Pipeline]
+    F[Position Update Loop]
+    G[Jetson Orin Software Stack — ROS2 + Libraries]
+    H[Aerothon Build Plan]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+```
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: false, securityLevel: "strict" })
+    const raw = document.getElementById("source").textContent
+    const html = marked.parse(raw, { gfm: true })
+    const content = document.getElementById("content")
+    content.innerHTML = html
+    let i = 0
+    for (const block of content.querySelectorAll("pre > code.language-mermaid, pre > code.mermaid")) {
+      const wrap = document.createElement("div")
+      wrap.className = "mermaid"
+      wrap.textContent = block.textContent
+      wrap.id = "mermaid-" + (++i)
+      block.parentElement.replaceWith(wrap)
+    }
+    mermaid.run({ querySelector: ".mermaid" })
+  </script>
+</body>
+</html>
