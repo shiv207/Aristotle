@@ -1,5 +1,3 @@
 # Quiz
 
-Look at this note in Obsidian preview, then type **A**, **B**, **C**, or **D** in OpenCode.
-
-Aristotle will overwrite this file on each quiz.
+No quiz yet. Aristotle will overwrite this file when a probe or lock-in starts.

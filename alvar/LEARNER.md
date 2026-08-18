@@ -1,4 +1,4 @@
-x# Aristotle Learner Profile
+# Aristotle Learner Profile
 
 This file is the persistent learner model. Aristotle reads it at the start of every session and updates **Current knowledge** after quizzes. Do not invent biography. Unknown means unknown until probing.
 
@@ -39,8 +39,7 @@ unknown — probe before assuming mechanics, electromagnetism, or quantum.
 
 This section is updated automatically by Aristotle.
 
-- **Vectors** (topic: `vectors`, mastery: `EXPOSED`, last tested: none — quiz skipped)
-- **Coordinate Frames & Transforms** (topic: `coordinate-frames-transforms`, mastery: `UNDERSTOOD`, last tested: 2026-08-18)
+none yet
 
 ## Known strengths
 
@@ -52,4 +51,4 @@ unknown
 
 ## Active learning goals
 
-- Understand self-attention deeply enough to implement it from scratch in PyTorch. Current node: vectors. Next: dot product.
+none yet
