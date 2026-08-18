@@ -4,6 +4,18 @@ type: now
 
 # Now
 
-Nothing in progress.
+**Understand physically what divergence and curl mean, beyond just formulas — starting from intuition down to the partial derivatives.**
 
-Start a lesson in OpenCode (`/teach …`). Notes will land in `alvar/` and this page will show the current topic, quiz, and map.
+This note stays at the top of Aristotle. All notes live in `alvar/`.
+
+## Quiz
+
+![[alvar/quizzes/current]]
+
+## Map
+
+![[alvar/maps/divergence-curl-meaning]]
+
+## Also
+
+- [[alvar/LEARNER|Learner profile]]

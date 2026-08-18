@@ -1,0 +1,5 @@
+{
+  "quiz": "alvar/quizzes/current.md",
+  "map": "alvar/maps/divergence-curl-meaning.md",
+  "topic": "Understand physically what divergence and curl mean, beyond just formulas — starting from intuition down to the partial derivatives."
+}

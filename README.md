@@ -1,181 +1,218 @@
 # Aristotle
 
-A persistent one-to-one AI learning system.
+A local, one-to-one tutor. You talk in [OpenCode](https://opencode.ai). Notes, maps, and quizzes live in [Obsidian](https://obsidian.md). State is Markdown on disk — not a chatbot history you lose when the session ends.
 
-Aristotle is not a chatbot. It is a local learning environment: the tutor adapts to what you actually know, teaches one reasoning step at a time, keeps a dependency graph, verifies important claims, draws a picture only when it helps, and writes the whole history to disk.
-
-The teaching methodology is the open-source [Alvarmethod](https://github.com/vasanthsreeram/Alvarmethod) (Alvar method). The system you talk to is **Aristotle**.
-
-## What it is
-
-A personal tutor that lives in this folder. Open it in OpenCode to learn. Open it in Obsidian to review.
-
-## Core loop
+Teaching method: [Alvarmethod](https://github.com/vasanthsreeram/Alvarmethod) (Alvar method). The product you talk to is **Aristotle**.
 
 ```text
-Probe → Plan → Teach → Verify → Prove
+OpenCode  →  conversation, one reasoning step at a time
+Obsidian  →  current topic, mermaid maps, mermaid quizzes
+alvar/    →  the single folder where all learning is saved
 ```
 
-1. **Probe** — calibrate what is known, partial, and missing.
-2. **Plan** — write a Mermaid DAG and show it before teaching.
-3. **Teach** — one node, then stop.
-4. **Verify** — research claims that matter; quiz the node.
-5. **Prove** — lock-in. On failure, repair the gap. Persist knowledge state.
+---
 
-## Architecture
+## Contents
 
-```text
-                         USER
-                           │
-                           ▼
-                       OpenCode
-                           │
-                           ▼
-                    Aristotle Skill
-                           │
-              ┌────────────┼────────────┐
-              ▼            ▼            ▼
-            Probe         Plan        Teach
-              │            │            ▼
-         obsidian_quiz   Mermaid     One Node
-              │            │            │
-              └────────────┼────────────┘
-                           ▼
-                        Verify
-                           │
-                           ▼
-                         Quiz
-                     ┌─────┴─────┐
-                     ▼           ▼
-                   PASS         FAIL
-                     │           │
-                     ▼           ▼
-                  Prove       Repair Gap
-                     │           │
-                     └─────┬─────┘
-                           ▼
-                       Knowledge
-                         State
-                           │
-                           ▼
-                        Obsidian
+- [The problem](#the-problem)
+- [What we built](#what-we-built)
+- [How the workflow works](#how-the-workflow-works)
+- [Setup](#setup)
+- [Daily use](#daily-use)
+- [Repository](#repository)
+- [Commands](#commands)
+- [Principles](#principles)
+
+---
+
+## The problem
+
+Usual learning with an LLM is many-to-many and disposable:
+
+| Failure | What happens |
+|---------|----------------|
+| Generic curriculum | The model reteaches what you already know, or starts in the deep end. |
+| Chat as the notebook | Diagrams, quizzes, and “where we left off” vanish when the thread is gone. |
+| Quizzes in the transcript | Multiple-choice dumped as `A/B/C/D` in chat is easy to skim and easy to leak. |
+| Hidden vault files | State in `.dotfolders` never shows in Obsidian’s file explorer. |
+| Browser tabs for HTML | Leaving the tutor and a notes app for a random preview tab breaks focus. |
+
+We wanted one teacher for one mind: calibrate first, teach one node, lock it in, and keep a durable graph of what is known, weak, and next — visible in the vault while you talk.
+
+---
+
+## What we built
+
+Aristotle is this folder. It is not a course catalog and not a web app.
+
+| Goal | What shipped |
+|------|----------------|
+| Teach *this* learner | Persistent profile at `alvar/LEARNER.md`. Probe before a new subject. |
+| One step, then stop | Skill loop: **Probe → Plan → Teach → Verify → Prove**. |
+| A plan you can see | Mermaid DAG in `alvar/maps/` before the first lesson node. |
+| Quizzes that render | Mermaid quiz in Obsidian (`alvar/quizzes/current.md`), answer **A/B/C/D** back in OpenCode. |
+| One place for notes | All maps, sessions, knowledge, figures, and quizzes under **`alvar/`**. |
+| Current topic on top | **`00 NOW.md`** at the vault root of Aristotle. The OpenCode plugin refreshes it and opens it in Obsidian. |
+| No browser detour | No HTML preview tabs. OpenCode for talk; Obsidian for mermaid. |
+| Local models | Default model is Gemini via OpenCode (`google/gemini-3.5-flash`). Keys stay in OpenCode auth, not in git. |
+
+Mastery is recorded per concept (`EXPOSED` → `UNDERSTOOD` → `RETAINED` → `APPLIED` → `MASTERED`). One easy correct answer is not mastery.
+
+---
+
+## How the workflow works
+
+```mermaid
+flowchart LR
+  subgraph talk [OpenCode]
+    U[You] --> A[Aristotle]
+    A --> Q[obsidian_quiz / write notes]
+  end
+  subgraph vault [Obsidian]
+    N[00 NOW.md]
+    L[alvar/]
+    N --> L
+  end
+  Q --> N
+  U -->|A / B / C / D| A
 ```
 
-| Component | What it does |
-|-----------|----------------|
-| OpenCode | Agent runtime, `/teach`; talk here, don't render HTML in a browser |
-| Obsidian | Visible `alvar/` notes, mermaid maps, mermaid quizzes |
-| `teach` skill | Probe → plan → one node → lock-in quiz |
-| `probe` | Broad-then-narrow knowledge calibration |
-| `learn-profile` | Interview that writes `alvar/LEARNER.md` |
-| `learn-verify` | Claim → source → verdict before teaching as fact |
-| `learn-visual` | Optional mermaid figure in Obsidian |
-| `alvar/` | Filesystem state (visible in the vault; not a hidden dotfolder) |
+1. You start a lesson in OpenCode (`/teach …`).
+2. Aristotle reads `alvar/LEARNER.md` and either resumes a map or probes.
+3. A probe or lock-in quiz is written as mermaid to `alvar/quizzes/current.md`.
+4. The plugin updates **`00 NOW.md`** (current topic + quiz + map + session) and asks Obsidian to open that note.
+5. You look at **Now** in Obsidian, then type **A**, **B**, **C**, or **D** in OpenCode.
+6. Aristotle scores, updates the map and knowledge files, and either advances one node or inserts a missing prerequisite.
 
-Aristotle handles learning logistics. The learner handles the cognitive work.
+The filesystem is the database:
 
-## Installation
+| Path | Role |
+|------|------|
+| `00 NOW.md` | Always-on-top dashboard. Generated; not the source of truth. |
+| `alvar/LEARNER.md` | How you learn + current knowledge. |
+| `alvar/maps/` | Dependency graph for a goal. |
+| `alvar/sessions/` | Resumable session log. |
+| `alvar/quizzes/current.md` | Live mermaid quiz. |
+| `alvar/knowledge/` | Per-concept mastery. |
+| `alvar/visuals/` | Extra mermaid/SVG when a picture earns its keep. |
+| `alvar/research/` | Claim checks before something is taught as fact. |
 
-### Prerequisites
+`.alvar` is a symlink to `alvar/` so older skill paths still resolve. **Write to `alvar/`.** Obsidian hides folders that start with a dot.
+
+---
+
+## Setup
+
+### Requirements
 
 - [OpenCode](https://opencode.ai) (`opencode --version`)
-- A Google Gemini key already stored in OpenCode auth (`opencode providers login` → Google if needed)
-- Node.js / `npx` (to install or update skills)
-- [Obsidian](https://obsidian.md) (optional, for reading the vault)
+- [Obsidian](https://obsidian.md)
+- A Google Gemini credential in OpenCode (`/connect` → Google), stored under `~/.local/share/opencode/auth.json`
 
-This vault is configured for **Gemini** (`google/gemini-3.5-flash`) in `opencode.json`. Credentials stay in `~/.local/share/opencode/auth.json`, not in git.
+This repo pins the default model in `opencode.json`:
+
+```json
+"model": "google/gemini-3.5-flash"
+```
+
+### Obsidian
+
+**Open folder as vault** → this repository (`…/Aristotle`).
+
+You should see `00 NOW.md` at the top of the file list and a folder named `alvar` (no leading dot).
+
+If Obsidian already has a parent folder (for example `Developer`) registered as the vault, Aristotle still works: notes appear as `Aristotle/00 NOW.md` and `Aristotle/alvar/…`. The plugin looks up the registered vault path; it does not assume the vault is named `Aristotle`.
+
+### OpenCode
 
 ```bash
-cd ~/Developer/Aristotle
+cd /path/to/Aristotle
 opencode
 ```
 
-Teaching skills live under `.agents/skills/` and `.opencode/skills/`. Slash commands: `/teach`, `/probe`, `/learn-profile`, `/learn-visual`.
+Keep Obsidian open in the background.
 
-Keep **OpenCode** for the conversation. Keep **Obsidian** open. All learning notes live in **`alvar/`**. **`00 NOW.md`** sits at the top of the Aristotle folder and always shows the current topic, quiz, and map.
+---
 
-This repo lives at `~/Developer/Aristotle` with a symlink at `~/Aristotle` when that path was free.
-
-## Obsidian
-
-OpenCode looks up whichever folder Obsidian actually has registered as a vault (right now that is `Developer` at `~/Developer`, not a vault named Aristotle). Notes then open as `Aristotle/alvar/...` inside that vault.
-
-To make `alvar` sit at the vault root instead: Obsidian → **Open folder as vault** → `~/Developer/Aristotle`.
-
-Quizzes are mermaid notes at `alvar/quizzes/current.md`. **`00 NOW.md`** at the top of the Aristotle folder always shows the current topic, quiz, and map. Answer A/B/C/D back in OpenCode.
-
-## Usage
+## Daily use
 
 ```text
-/teach I want to understand transformers deeply enough to implement self-attention from scratch.
+/teach I want to understand <topic> deeply enough to use it, not recite it.
 ```
 
-Also:
+Also: `teach me X`, `help me learn X`, `walk me through X`, `/probe`, `/learn-profile`, `/learn-visual`.
 
-```text
-/teach <topic>
-teach me X
-help me learn X
-I want to understand X
-walk me through X
-```
+| You | Aristotle | You see |
+|-----|-----------|---------|
+| State a goal | Loads learner + map, or probes | Quiz mermaid on **Now** |
+| Answer A–D in OpenCode | Scores; writes map/session/knowledge | **Now** and `alvar/` update |
+| Ask to continue | One node only, then another quiz | Same |
 
-Aristotle should:
+Do not paste multiple-choice into the OpenCode transcript. Do not hunt in `.opencode/` or `.alvar/` for the lesson — that is machinery, not the notebook.
 
-1. Load `alvar/LEARNER.md`
-2. Reuse a recent map for this goal, or probe
-3. Probe with a mermaid quiz in Obsidian (`obsidian_quiz`)
-4. Build and show a Mermaid dependency graph in `alvar/maps/`
-5. Teach the first node — only one
-6. Lock-in quiz in Obsidian; answer in OpenCode
-7. Evaluate, update knowledge, persist the session
-8. Continue or insert a prerequisite
+---
 
-Related commands: `/probe`, `/learn-profile`.
-
-## File structure
+## Repository
 
 ```text
 Aristotle/
-├── alvar/                  # visible learning notes (maps, quizzes, sessions)
+├── 00 NOW.md                 # current topic (auto-updated)
+├── AGENTS.md                 # tutor operating rules
+├── opencode.json             # model + skills
+├── alvar/                    # all learning notes
 │   ├── LEARNER.md
+│   ├── current.json          # pointer used to rebuild Now
 │   ├── maps/
 │   ├── quizzes/
 │   ├── sessions/
+│   ├── knowledge/
 │   ├── visuals/
 │   ├── research/
-│   ├── knowledge/
 │   └── templates/
-├── .agents/skills/         # Teaching skills
-├── .opencode/              # OpenCode commands, skills, and Obsidian plugin
-├── subjects/
-├── projects/
-├── AGENTS.md               # operating rules for the tutor
-├── opencode.json
-└── README.md
+├── .opencode/
+│   ├── command/              # /teach, /probe, …
+│   ├── plugins/              # Obsidian open + Now + quizzes
+│   └── skills/
+├── .agents/skills/           # same teaching skills, portable
+├── subjects/                 # optional subject notes
+└── projects/                 # optional applied work
 ```
 
-`alvar/` is the visible vault folder for maps, quizzes, and sessions. `.alvar` is only a symlink so older skills still work.
+---
 
-## Philosophy
+## Commands
 
-Usual materials are many-to-many. Aristotle is one-to-one.
+| Command | Job |
+|---------|-----|
+| `/teach` | Full loop: probe, plan, one node, lock-in quiz |
+| `/probe` | Map only |
+| `/learn-profile` | Interview → `alvar/LEARNER.md` |
+| `/learn-visual` | One mermaid figure in the vault |
+
+Plugin tools (called by Aristotle, not by you):
+
+| Tool | Job |
+|------|-----|
+| `obsidian_quiz` | Write mermaid quiz, refresh **Now**, open Obsidian |
+| `preview_markdown` | Write a mermaid note under `alvar/visuals/` |
+
+---
+
+## Principles
 
 - Teach **this** learner, at the edge of **this** understanding.
 - Do not reteach `known`. Do not start in `unknown` with no ramp.
-- Struggle stays in the material. Aristotle absorbs order, files, verification, and "what next."
+- Struggle stays in the material. Aristotle absorbs order, files, and “what next.”
 - Understanding is not mastery.
 
-## Tests
+Methodology credit: [Eero Alvar — *How I Use AI to Learn Things*](https://youtu.be/kzcI5F4tGiU). Skills pack: [vasanthsreeram/Alvarmethod](https://github.com/vasanthsreeram/Alvarmethod).
+
+---
+
+## Checks
 
 ```bash
 ./scripts/validate.sh
 ```
 
-See `tests/README.md` for the eight checks and what still needs a live OpenCode TUI.
-
-## v0.1 scope
-
-Local-first: OpenCode + agent skills + Markdown + YAML + Mermaid + Obsidian.
-
-Not in v0.1: React, databases, RAG, auth, cloud, custom frontends, telemetry.
+Live `/teach` still requires OpenCode + Obsidian running together.
