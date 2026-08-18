@@ -1,4 +1,4 @@
-# Aristotle Learner Profile
+x# Aristotle Learner Profile
 
 This file is the persistent learner model. Aristotle reads it at the start of every session and updates **Current knowledge** after quizzes. Do not invent biography. Unknown means unknown until probing.
 

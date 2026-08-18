@@ -37,7 +37,7 @@ Probe → Plan → Teach → Verify → Prove
               ▼            ▼            ▼
             Probe         Plan        Teach
               │            │            ▼
-           question      Mermaid     One Node
+         obsidian_quiz   Mermaid     One Node
               │            │            │
               └────────────┼────────────┘
                            ▼
@@ -63,14 +63,14 @@ Probe → Plan → Teach → Verify → Prove
 
 | Component | What it does |
 |-----------|----------------|
-| OpenCode | Agent runtime, `/teach`, native `question` quizzes, HTML/markdown preview |
+| OpenCode | Agent runtime, `/teach`; talk here, don't render HTML in a browser |
+| Obsidian | Visible `alvar/` notes, mermaid maps, mermaid quizzes |
 | `teach` skill | Probe → plan → one node → lock-in quiz |
 | `probe` | Broad-then-narrow knowledge calibration |
-| `learn-profile` | Interview that writes `.alvar/LEARNER.md` |
+| `learn-profile` | Interview that writes `alvar/LEARNER.md` |
 | `learn-verify` | Claim → source → verdict before teaching as fact |
-| `learn-visual` | Optional SVG/diagram when a picture locks the idea |
-| `.alvar/` | Filesystem state (no database) |
-| Obsidian | Human-facing vault: maps, sessions, Mermaid |
+| `learn-visual` | Optional mermaid figure in Obsidian |
+| `alvar/` | Filesystem state (visible in the vault; not a hidden dotfolder) |
 
 Aristotle handles learning logistics. The learner handles the cognitive work.
 
@@ -92,17 +92,17 @@ opencode
 
 Teaching skills live under `.agents/skills/` and `.opencode/skills/`. Slash commands: `/teach`, `/probe`, `/learn-profile`, `/learn-visual`.
 
-HTML and markdown previews: Aristotle writes files under `.alvar/visuals/` and opens them in the browser via `preview_html` / `preview_markdown`. Obsidian live preview also renders mermaid in the vault.
+Keep **OpenCode** for the conversation. Keep **Obsidian** open. All learning notes live in **`alvar/`**. **`00 NOW.md`** sits at the top of the Aristotle folder and always shows the current topic, quiz, and map.
 
 This repo lives at `~/Developer/Aristotle` with a symlink at `~/Aristotle` when that path was free.
 
 ## Obsidian
 
-Open this folder as a vault: **Open folder as vault** → `~/Aristotle` (or `~/Developer/Aristotle`).
+OpenCode looks up whichever folder Obsidian actually has registered as a vault (right now that is `Developer` at `~/Developer`, not a vault named Aristotle). Notes then open as `Aristotle/alvar/...` inside that vault.
 
-Obsidian will show `.alvar/`, `subjects/`, and `projects/`. Mermaid fences in Markdown render in preview. No custom plugin is required for v0.1.
+To make `alvar` sit at the vault root instead: Obsidian → **Open folder as vault** → `~/Developer/Aristotle`.
 
-When Aristotle writes a map, session, knowledge note, or visual under `.alvar/`, OpenCode opens that file in Obsidian immediately. Keep this folder open as a vault while you learn.
+Quizzes are mermaid notes at `alvar/quizzes/current.md`. **`00 NOW.md`** at the top of the Aristotle folder always shows the current topic, quiz, and map. Answer A/B/C/D back in OpenCode.
 
 ## Usage
 
@@ -122,12 +122,12 @@ walk me through X
 
 Aristotle should:
 
-1. Load `.alvar/LEARNER.md`
+1. Load `alvar/LEARNER.md`
 2. Reuse a recent map for this goal, or probe
-3. Probe missing knowledge with `question`
-4. Build and show a Mermaid dependency graph
+3. Probe with a mermaid quiz in Obsidian (`obsidian_quiz`)
+4. Build and show a Mermaid dependency graph in `alvar/maps/`
 5. Teach the first node — only one
-6. Ask a lock-in question
+6. Lock-in quiz in Obsidian; answer in OpenCode
 7. Evaluate, update knowledge, persist the session
 8. Continue or insert a prerequisite
 
@@ -137,16 +137,17 @@ Related commands: `/probe`, `/learn-profile`.
 
 ```text
 Aristotle/
-├── .alvar/                 # persistent learning state (Alvarmethod-compatible path)
+├── alvar/                  # visible learning notes (maps, quizzes, sessions)
 │   ├── LEARNER.md
 │   ├── maps/
+│   ├── quizzes/
 │   ├── sessions/
 │   ├── visuals/
 │   ├── research/
 │   ├── knowledge/
 │   └── templates/
 ├── .agents/skills/         # Teaching skills
-├── .opencode/              # OpenCode commands, skills, and preview plugin
+├── .opencode/              # OpenCode commands, skills, and Obsidian plugin
 ├── subjects/
 ├── projects/
 ├── AGENTS.md               # operating rules for the tutor
@@ -154,7 +155,7 @@ Aristotle/
 └── README.md
 ```
 
-`.alvar` is named for compatibility with Alvarmethod skills. It is Aristotle's state directory.
+`alvar/` is the visible vault folder for maps, quizzes, and sessions. `.alvar` is only a symlink so older skills still work.
 
 ## Philosophy
 

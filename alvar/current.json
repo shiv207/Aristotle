@@ -1,0 +1,8 @@
+{
+  "topic": "Real-time drone mapping & position update",
+  "map": "alvar/maps/drone-realtime-mapping.md",
+  "session": "alvar/sessions/2026-08-18-drone-realtime-mapping.md",
+  "quiz": "alvar/quizzes/current.md",
+  "visual": "alvar/visuals/coord-frames-1.svg",
+  "node": "Coordinate frames & transforms"
+}

@@ -42,10 +42,10 @@ else
 fi
 
 # --- Test 2: LEARNER.md ---
-if [[ -f .alvar/LEARNER.md ]] && grep -q "Aristotle Learner Profile" .alvar/LEARNER.md; then
-  ok "Test 2 — .alvar/LEARNER.md exists"
+if [[ -f alvar/LEARNER.md ]] && grep -q "Aristotle Learner Profile" alvar/LEARNER.md; then
+  ok "Test 2 — alvar/LEARNER.md exists"
 else
-  bad "Test 2 — missing .alvar/LEARNER.md"
+  bad "Test 2 — missing alvar/LEARNER.md"
 fi
 
 # --- Test 3: Mermaid map can be created / is valid ---
@@ -111,7 +111,7 @@ else
 fi
 
 # --- Structure ---
-for d in .alvar/maps .alvar/sessions .alvar/visuals .alvar/research .alvar/knowledge \
+for d in alvar/maps alvar/sessions alvar/visuals alvar/research alvar/knowledge alvar/quizzes \
          subjects/mathematics subjects/computer-science subjects/artificial-intelligence \
          subjects/robotics subjects/physics projects .opencode/skills/teach; do
   if [[ -d "$d" ]]; then
